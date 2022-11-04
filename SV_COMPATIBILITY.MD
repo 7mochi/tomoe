@@ -1,0 +1,33 @@
+### [Flowabot ✅](https://github.com/LeaPhant/flowabot) [osu!api v1]
+- !addpp - ✅ Works
+- !ar - ☑️ Not osu!api dependent.
+- !bmi - ☑️ Not osu!api dependent.
+- !bpm - ✅ Works
+- !bttv - ☑️ Not osu!api dependent.
+- !compare - ✅ Works
+- !emojipedia - ☑️ Not osu!api dependent.
+- !emote - ☑️ Not osu!api dependent.
+- !eval - ☑️ Not osu!api dependent.
+- !fantasychange - ☑️ Not osu!api dependent.
+- !fantasyname - ☑️ Not osu!api dependent.
+- !ffz - ☑️ Not osu!api dependent.
+- !flowa - ☑️ Not osu!api dependent.
+- !help - ☑️ Not osu!api dependent.
+- !ign-set - ☑️ Not osu!api dependent.
+- !lastfm - ☑️ Not osu!api dependent.
+- !np - ☑️ Not osu!api dependent.
+- !osu-track - ☑️ Not osu!api dependent.
+- !osu-untrack - ☑️ Not osu!api dependent.
+- !osu - ✅ Works
+- !ping - ☑️ Not osu!api dependent.
+- !recent - ✅ Works
+- !render - ✅ Works
+- !score - ✅ Works
+- !strains - ✅ Works
+- !tap - ☑️ Not osu!api dependent.
+- !time - ☑️ Not osu!api dependent.
+- !top - ✅ Works
+- !tops - ✅ Works
+- !uptime - ☑️ Not osu!api dependent.
+- !viewers - ☑️ Not osu!api dependent.
+- !with - ☑️ Not osu!api dependent.

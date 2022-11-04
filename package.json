@@ -1,0 +1,42 @@
+{
+  "name": "tomoe",
+  "version": "0.1",
+  "description": "A wrapper for bancho.py that emulates osu!api v1 and v2",
+  "main": "dist/index.js",
+  "repository": "https://github.com/osuperu/tomoe",
+  "bugs": "https://github.com/osuperu/tomoe/issues",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts"
+  },
+  "author": "7mochi",
+  "license": "MIT",
+  "dependencies": {
+    "@minhducsun2002/node-osr-parser": "^0.0.1-2",
+    "axios": "^1.1.3",
+    "axios-rate-limit": "^1.3.0",
+    "express": "^4.18.2",
+    "express-promise-router": "^4.1.1",
+    "express-rate-limit": "^6.6.0",
+    "i18n-iso-countries": "^7.5.0",
+    "lodash": "^4.17.21",
+    "lzma-native": "^8.0.6",
+    "moment": "^2.29.4",
+    "mysql2": "^2.3.3",
+    "winston": "^3.8.2",
+    "winston-daily-rotate-file": "^4.7.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/lodash": "^4.14.187",
+    "@types/lzma-native": "^4.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "eslint": "^8.26.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
+  }
+}

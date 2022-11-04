@@ -1,0 +1,31 @@
+{
+	"enableHttps": false,
+	"bpyApiUrl": "https://api.bpyserver.com",
+	"requireApiKey": true,
+	"api": {
+		"http": {
+			"host": "127.0.0.1",
+			"port": 5000,
+			"publicUrl": "http://127.0.0.1:5000"
+		},
+		"https": {
+			"host": "127.0.0.1",
+			"port": 5443,
+			"publicUrl": "https://127.0.0.1:5443",
+			"certificatePath": "/home/user/certificate.crt",
+			"privateKeyPath": "/home/user/private.key"
+		},
+		"ratelimit": {
+			"requests": 500,
+			"time": 300000
+		}
+	},
+	"database": {
+		"connectionLimitPool": 100,
+		"host": "127.0.0.1",
+		"port": 3306,
+		"user": "banchopy_user",
+		"password": "test",
+		"database": "banchopy"
+	}
+}
