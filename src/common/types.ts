@@ -1,4 +1,6 @@
-/** Bancho.py DB */
+/* -------------------------------------------------------------------------- */
+/*                                Bancho.py DB                                */
+/* -------------------------------------------------------------------------- */
 export interface UserBpyDb {
 	id: number;
 	name: string;
@@ -80,7 +82,9 @@ export interface BeatmapInfoDb {
 	set_id: number;
 }
 
-/** Bancho.py API */
+/* -------------------------------------------------------------------------- */
+/*                                Bancho.py API                               */
+/* -------------------------------------------------------------------------- */
 export interface UserInfoBpyApi {
 	status: string;
 	player: UserStatsInfoBpyApi;
@@ -181,40 +185,9 @@ export interface UserClanInfoBpy {
 	tag: string;
 }
 
-/** Tomoe API */
-export interface UserBancho {
-	user_id: string;
-	username: string;
-	join_date: string;
-	count300: string;
-	count100: string;
-	count50: string;
-	playcount: string;
-	ranked_score: string;
-	total_score: string;
-	pp_rank: string;
-	level: string;
-	pp_raw: string;
-	accuracy: string;
-	count_rank_ss: string;
-	count_rank_ssh: string;
-	count_rank_s: string;
-	count_rank_sh: string;
-	count_rank_a: string;
-	country: string;
-	total_seconds_played: string;
-	pp_country_rank: string;
-	events: EventsBancho[];
-}
-
-export interface EventsBancho {
-	display_html: string;
-	beatmap_id: string;
-	beatmapset_id: string;
-	date: string;
-	epicfactor: string;
-}
-
+/* -------------------------------------------------------------------------- */
+/*                                Tomoe API V1                                */
+/* -------------------------------------------------------------------------- */
 export interface UserBestBancho {
 	beatmap_id: string;
 	score_id: string;
@@ -272,11 +245,183 @@ export interface UserRecentBancho {
 	rank: string;
 }
 
-export interface LZMAReplayBancho {
-	content: string;
-	encoding: string;
+/* -------------------------------------------------------------------------- */
+/*                                Tomoe API V2                                */
+/* -------------------------------------------------------------------------- */
+export interface UserBanchoV2 extends UserCompactBaseBanchoV2 {
+	discord?: string;
+	has_supported: boolean;
+	interests?: string;
+	join_date: string;
+	kudosu: UserCompactKudosuBanchoV2;
+	location?: string;
+	max_blocks?: number;
+	max_friends: number;
+	occupation?: string;
+	playmode: string;
+	playstyle: string[];
+	post_count: number;
+	profile_order: string[];
+	title?: string;
+	title_url?: string;
+	twitter?: string;
+	website?: string;
+	cover: UserCompactCoverBanchoV2;
+	country: UserCompactCountryBanchoV2;
+	is_restricted: boolean;
 }
 
-export interface ErrorApiBancho {
-	error: string;
+export interface UserCompactBanchoV2 extends UserCompactBaseBanchoV2 {
+	country?: UserCompactCountryBanchoV2;
+	cover?: UserCompactCoverBanchoV2;
+	is_restricted?: boolean;
 }
+
+export interface UserCompactBaseBanchoV2 {
+	avatar_url: string;
+	cover_url?: string;
+	country_code: string;
+	default_group: string;
+	id: number;
+	is_active: boolean;
+	is_bot: boolean;
+	is_deleted: boolean;
+	is_online: boolean;
+	is_supporter: boolean;
+	last_visit?: string;
+	pm_friends_only: boolean;
+	profile_colour: string;
+	username: string;
+	account_history?: UserAccountHistoryBanchoV2[];
+	active_tournament_banner?: UserCompactProfileBannerBanchoV2;
+	badges?: UserBadgeBanchoV2[];
+	beatmap_playcounts_count?: number;
+	blocks?: unknown;
+	favourite_beatmapset_count?: number;
+	follower_count?: number;
+	friends?: unknown;
+	groups?: UserGroupBanchoV2[];
+	monthly_playcounts?: UserMonthlyPlaycountBanchoV2[];
+	page?: unknown;
+	previous_usernames?: string[];
+	rank_history?: {
+		data?: number[];
+	};
+	replays_watched_counts?: number;
+	scores_best_count?: number;
+	scores_first_count?: number;
+	scores_recent_count?: number;
+	statistics?: UserCompactStatisticsBanchoV2;
+	statistics_rulesets?: UserStatisticsRulesetsBanchoV2;
+	support_level?: unknown;
+	unread_pm_count?: unknown;
+	user_achievements?: UserAchievementBanchoV2[];
+	user_preferences?: unknown;
+	ranked_and_approved_beatmapset_count?: number;
+	guest_beatmapset_count: number;
+	graveyard_beatmapset_count?: number;
+	unranked_beatmapset_count?: number;
+	ranked_beatmapset_count?: number;
+	loved_beatmapset_count?: number;
+	pending_beatmapset_count?: number;
+	mapping_follower_count: number;
+	comments_count: number;
+}
+
+export interface UserAccountHistoryBanchoV2 {
+	todo?: boolean;
+}
+
+export interface UserCompactProfileBannerBanchoV2 {
+	todo?: boolean;
+}
+
+export interface UserBadgeBanchoV2 {
+	todo?: boolean;
+}
+
+export interface UserGroupBanchoV2 {
+	colour: string;
+	has_listing: boolean;
+	has_playmodes: boolean;
+	id: number;
+	identifier: string;
+	is_probationary: boolean;
+	name: string;
+	short_name: string;
+}
+
+export interface UserMonthlyPlaycountBanchoV2 {
+	todo?: boolean;
+}
+
+export interface UserCompactKudosuBanchoV2 {
+	available: number;
+	total: number;
+}
+
+export interface UserCompactCoverBanchoV2 {
+	custom_url?: string;
+	url: string;
+	id: string;
+}
+
+export interface UserCompactCountryBanchoV2 {
+	code: string;
+	name: string;
+}
+
+export interface UserCompactStatisticsBanchoV2 {
+	level: UserCompactStatsLevelBanchoV2;
+	global_rank: number;
+	pp: number;
+	ranked_score: number;
+	hit_accuracy: number;
+	play_count: number;
+	play_time: number;
+	total_score: number;
+	total_hits: number;
+	maximum_combo: number;
+	replays_watched_by_others: number;
+	is_ranked: true;
+	grade_counts: UserCompactStatsGradeCountsBanchoV2;
+	country_rank: number;
+	rank: UserCompactStatsRankBanchoV2;
+}
+
+export interface UserStatisticsRulesetsBanchoV2 {
+	todo?: boolean;
+}
+
+export interface UserAchievementBanchoV2 {
+	achieved_at: string;
+	achievement_id: number;
+}
+
+export interface UserCompactStatsLevelBanchoV2 {
+	current: number;
+	progress: number;
+}
+
+export interface UserCompactStatsGradeCountsBanchoV2 {
+	ss: number;
+	ssh: number;
+	s: number;
+	sh: number;
+	a: number;
+}
+
+export interface UserCompactStatsRankBanchoV2 {
+	country: number;
+}
+
+export interface Dictionary {
+	[index: string]: number;
+}
+
+export const GamemodeIntBanchoV2: Dictionary = {
+	osu: 0,
+	taiko: 1,
+	fruits: 2,
+	catch: 3,
+};

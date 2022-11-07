@@ -1,21 +1,18 @@
-import express from "express";
-import http from "http";
-import https from "https";
+import fastifyRateLimit from "@fastify/rate-limit";
+import Winston from "winston";
 import { Config } from "./util/config";
 import { Logger } from "./util/logger";
-import * as fs from "fs";
 import { Database } from "./database";
-import Winston from "winston";
-import { ApiV1Router } from "./router/v1/index";
-import rlimit from "express-rate-limit";
-
+import { fastify } from "fastify";
+import v1 from "./router/v1";
+import v2 from "./router/v2";
 export class App {
 	public static instance = new App();
 
-	public app = express();
-
-	public httpServer: http.Server;
-	public httpsServer?: https.Server;
+	public app = fastify({
+		logger: false,
+		trustProxy: true,
+	});
 	public database: Database;
 
 	public config: Config;
@@ -25,7 +22,6 @@ export class App {
 		this.config = new Config();
 		this.logger = Logger.get();
 
-		this.httpServer = http.createServer(this.app);
 		this.database = new Database(
 			this.config.database.connectionLimitPool,
 			this.config.database.host,
@@ -34,82 +30,43 @@ export class App {
 			this.config.database.password,
 			this.config.database.database
 		);
-
-		if (this.config.enableHttps) {
-			this.httpsServer = https.createServer({
-				key: fs.readFileSync(
-					this.config.api.https.privateKeyPath,
-					"utf8"
-				),
-				cert: fs.readFileSync(
-					this.config.api.https.certificatePath,
-					"utf8"
-				),
-			});
-		}
 	}
 
 	async start(): Promise<void> {
-		const rateLimiter = rlimit({
-			windowMs: this.config.api.ratelimit.time,
+		this.app.register(fastifyRateLimit, {
 			max: this.config.api.ratelimit.requests,
-			message: "You have been rate-limited.",
+			timeWindow: this.config.api.ratelimit.timeWindow,
 		});
-		this.app.use("/api/v1", rateLimiter, new ApiV1Router().router);
-		this.app.disable("x-powered-by");
 
-		this.httpServer.listen(
-			this.config.api.http.port,
-			this.config.api.http.host,
+		this.app.register(v1, { prefix: "/v1" });
+		this.app.register(v2, { prefix: "/v2" });
+
+		this.app.listen(
+			{
+				port: this.config.api.port,
+				host: this.config.api.host,
+			},
 			() => {
 				this.logger.info(
-					`Listening HTTP requests on ${this.config.api.http.publicUrl}`
+					`Listening requests on ${this.config.api.publicUrl}`
 				);
 			}
 		);
-
-		this.httpsServer?.listen(
-			this.config.api.https.port,
-			this.config.api.https.host,
-			() => {
-				this.logger.info(
-					`Listening HTTPS requests on ${this.config.api.https.publicUrl}`
-				);
-			}
-		);
-
-		this.httpServer.on("error", () => {
-			this.logger.error(
-				`An error occurred while listening to HTTP requests on ${this.config.api.http.publicUrl}`
-			);
-		});
-
-		this.httpsServer?.on("error", () => {
-			this.logger.error(
-				`An error occurred while listening to HTTPS requests on ${this.config.api.http.publicUrl}`
-			);
-		});
 	}
 
 	async stop(): Promise<void> {
 		this.logger.info("Stopping app...");
 
-		this.httpServer.close((error) => {
-			if (error) {
+		this.app.close().then(
+			() => {
+				this.logger.info("Server closed succesfully!");
+			},
+			(err) => {
 				this.logger.error(
 					"Error during the HTTP server shutdown.",
-					error
+					err
 				);
 			}
-		});
-
-		this.httpsServer?.close((error) => {
-			if (error) {
-				this.logger.error(
-					"Error during the HTTPS server shutdown.",
-					error
-				);
-			}
-		});
+		);
 	}
 }

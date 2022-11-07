@@ -4,24 +4,16 @@ import _ from "lodash";
 export class Config {
 	public enableHttps: boolean;
 	public bpyApiUrl: string;
+	public bpyAvatarUrl: string;
 	public requireApiKey: boolean;
 	
 	public api = {
-		http: {
-			host: "",
-			port: 5000,
-			publicUrl: "",
-		},
-		https: {
-			host: "",
-			port: 5443,
-			publicUrl: "",
-			certificatePath: "",
-			privateKeyPath: "",
-		},
+		host: "",
+		port: 5000,
+		publicUrl: "",
 		ratelimit: {
 			requests: 500,
-			time: 300000
+			timeWindow: ""
 		}
 	}
 
