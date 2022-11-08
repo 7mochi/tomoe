@@ -19,5 +19,9 @@
 		"user": "banchopy_user",
 		"password": "test",
 		"database": "banchopy"
+	},
+	"redis": {
+		"host": "127.0.0.1",
+		"port": 6379
 	}
 }

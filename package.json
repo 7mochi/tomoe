@@ -23,6 +23,7 @@
     "lzma-native": "^8.0.6",
     "moment": "^2.29.4",
     "mysql2": "^2.3.3",
+    "redis": "^4.4.0",
     "winston": "^3.8.2",
     "winston-daily-rotate-file": "^4.7.1"
   },

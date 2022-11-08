@@ -26,6 +26,11 @@ export class Config {
 		database: ""
 	}
 
+	public redis = {
+		host: "",
+		port: 6379
+	}
+
 	constructor() {
 		this.load();
 	}

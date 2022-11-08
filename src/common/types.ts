@@ -50,6 +50,24 @@ export interface UserTopPlaysDb {
 	online_checksum: string;
 }
 
+export interface UserStatsDb {
+	mode: number;
+	tscore: number;
+	rscore: number;
+	pp: number;
+	plays: number;
+	playtime: number;
+	acc: number;
+	max_combo: number;
+	xh_count: number;
+	x_count: number;
+	sh_count: number;
+	s_count: number;
+	a_count: number;
+	rank?: number;
+	country_rank?: number;
+}
+
 export interface BeatmapScoreDb {
 	name: string;
 	id: number;

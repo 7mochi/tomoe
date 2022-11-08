@@ -1,11 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import moment from "moment";
 import { App } from "../../app";
-import {
-	GamemodeIntBanchoV2,
-	UserBpyDb,
-} from "../../common/types";
-import { BpyApi } from "../../util/bpy-api";
+import { GamemodeIntBanchoV2, UserBpyDb } from "../../common/types";
 import { BpyDb } from "../../util/bpy-db";
 import { Misc } from "../../util/misc";
 import countries from "i18n-iso-countries";
@@ -61,7 +57,22 @@ export default async function (
 
 	if (!user) return reply.send({ error: errors.USER_NOT_FOUND });
 
-	const userStats = await BpyApi.getUserInfoByID(user.id);
+	const userStats = await BpyDb.getStatsByID(user.id);
+	for (const key in userStats) {
+		const rank = await App.instance.redis.ZREVRANK(
+			`bancho:leaderboard:${key}`,
+			`${user.id}`
+		);
+		userStats[key].rank = Misc.isNumeric(rank) ? rank + 1 : 0;
+
+		const countryRank = await App.instance.redis.ZREVRANK(
+			`bancho:leaderboard:${key}:${user.country}`,
+			`${user.id}`
+		);
+		userStats[key].country_rank = Misc.isNumeric(countryRank)
+			? countryRank + 1
+			: 0;
+	}
 
 	const bpyUrl = await App.instance.config.bpyAvatarUrl;
 	const coverUrl = `https://osu.ppy.sh/images/headers/profile-covers/c${Misc.randomIntFromInterval(
@@ -144,43 +155,27 @@ export default async function (
 				current: 727,
 				progress: 69,
 			},
-			global_rank:
-				userStats.player.stats[GamemodeIntBanchoV2[gamemode]].rank,
-			pp: userStats.player.stats[GamemodeIntBanchoV2[gamemode]].pp,
-			ranked_score:
-				userStats.player.stats[GamemodeIntBanchoV2[gamemode]].rscore,
-			hit_accuracy:
-				userStats.player.stats[GamemodeIntBanchoV2[gamemode]].acc,
-			play_count:
-				userStats.player.stats[GamemodeIntBanchoV2[gamemode]].plays,
-			play_time:
-				userStats.player.stats[GamemodeIntBanchoV2[gamemode]].playtime,
-			total_score:
-				userStats.player.stats[GamemodeIntBanchoV2[gamemode]].tscore,
+			global_rank: userStats[GamemodeIntBanchoV2[gamemode]].rank,
+			pp: userStats[GamemodeIntBanchoV2[gamemode]].pp,
+			ranked_score: userStats[GamemodeIntBanchoV2[gamemode]].rscore,
+			hit_accuracy: userStats[GamemodeIntBanchoV2[gamemode]].acc,
+			play_count: userStats[GamemodeIntBanchoV2[gamemode]].plays,
+			play_time: userStats[GamemodeIntBanchoV2[gamemode]].playtime,
+			total_score: userStats[GamemodeIntBanchoV2[gamemode]].tscore,
 			total_hits: 0, // TODO: To be implemented
-			maximum_combo:
-				userStats.player.stats[GamemodeIntBanchoV2[gamemode]].max_combo,
+			maximum_combo: userStats[GamemodeIntBanchoV2[gamemode]].max_combo,
 			replays_watched_by_others: 0,
 			is_ranked: true,
 			grade_counts: {
-				ss: userStats.player.stats[GamemodeIntBanchoV2[gamemode]]
-					.x_count,
-				ssh: userStats.player.stats[GamemodeIntBanchoV2[gamemode]]
-					.xh_count,
-				s: userStats.player.stats[GamemodeIntBanchoV2[gamemode]]
-					.s_count,
-				sh: userStats.player.stats[GamemodeIntBanchoV2[gamemode]]
-					.sh_count,
-				a: userStats.player.stats[GamemodeIntBanchoV2[gamemode]]
-					.a_count,
+				ss: userStats[GamemodeIntBanchoV2[gamemode]].x_count,
+				ssh: userStats[GamemodeIntBanchoV2[gamemode]].xh_count,
+				s: userStats[GamemodeIntBanchoV2[gamemode]].s_count,
+				sh: userStats[GamemodeIntBanchoV2[gamemode]].sh_count,
+				a: userStats[GamemodeIntBanchoV2[gamemode]].a_count,
 			},
-			country_rank:
-				userStats.player.stats[GamemodeIntBanchoV2[gamemode]]
-					.pp_country_rank,
+			country_rank: userStats[GamemodeIntBanchoV2[gamemode]].country_rank,
 			rank: {
-				country:
-					userStats.player.stats[GamemodeIntBanchoV2[gamemode]]
-						.pp_country_rank,
+				country: userStats[GamemodeIntBanchoV2[gamemode]].country_rank,
 			},
 		},
 		support_level: 0,

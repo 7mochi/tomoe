@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import moment from "moment";
+import { App } from "../../app";
 import { UserBpyDb } from "../../common/types";
-import { BpyApi } from "../../util/bpy-api";
 import { BpyDb } from "../../util/bpy-db";
 import { Misc } from "../../util/misc";
 
@@ -49,7 +49,20 @@ export default async function (
 
 	if (!user) return reply.send([]);
 
-	const userStats = await BpyApi.getUserInfoByID(user.id);
+	const userStats = await BpyDb.getStatsByID(user.id);
+	for (const key in userStats) {
+		const rank = await App.instance.redis.ZREVRANK(
+			`bancho:leaderboard:${key}`,
+			`${user.id}`
+		);
+		userStats[key].rank = Misc.isNumeric(rank) ? rank + 1 : 0;
+
+		const countryRank = await App.instance.redis.ZREVRANK(
+			`bancho:leaderboard:${key}:${user.country}`,
+			`${user.id}`
+		);
+		userStats[key].country_rank = Misc.isNumeric(countryRank) ? countryRank + 1 : 0;
+	}
 
 	return reply.send([
 		{
@@ -62,21 +75,21 @@ export default async function (
 			count300: `0`,
 			count100: `0`,
 			count50: `0`,
-			playcount: `${userStats.player.stats[gamemode].plays}`,
-			ranked_score: `${userStats.player.stats[gamemode].rscore}`,
-			total_score: `${userStats.player.stats[gamemode].tscore}`,
-			pp_rank: `${userStats.player.stats[gamemode].rank}`,
+			playcount: `${userStats[gamemode].plays}`,
+			ranked_score: `${userStats[gamemode].rscore}`,
+			total_score: `${userStats[gamemode].tscore}`,
+			pp_rank: `${userStats[gamemode].rank}`,
 			level: `727`, // TODO: To be implemented
-			pp_raw: `${userStats.player.stats[gamemode].pp}`,
-			accuracy: `${userStats.player.stats[gamemode].acc}`,
-			count_rank_ss: `${userStats.player.stats[gamemode].x_count}`,
-			count_rank_ssh: `${userStats.player.stats[gamemode].xh_count}`,
-			count_rank_s: `${userStats.player.stats[gamemode].s_count}`,
-			count_rank_sh: `${userStats.player.stats[gamemode].sh_count}`,
-			count_rank_a: `${userStats.player.stats[gamemode].a_count}`,
+			pp_raw: `${userStats[gamemode].pp}`,
+			accuracy: `${userStats[gamemode].acc}`,
+			count_rank_ss: `${userStats[gamemode].x_count}`,
+			count_rank_ssh: `${userStats[gamemode].xh_count}`,
+			count_rank_s: `${userStats[gamemode].s_count}`,
+			count_rank_sh: `${userStats[gamemode].sh_count}`,
+			count_rank_a: `${userStats[gamemode].a_count}`,
 			country: `${user.country.toUpperCase()}`,
-			total_seconds_played: `${userStats.player.stats[gamemode].playtime}`,
-			pp_country_rank: `${userStats.player.stats[gamemode].country_rank}`,
+			total_seconds_played: `${userStats[gamemode].playtime}`,
+			pp_country_rank: `${userStats[gamemode].country_rank}`,
 			events: [], // TODO: To be implemented
 		},
 	]);

@@ -6,6 +6,7 @@ import { Database } from "./database";
 import { fastify } from "fastify";
 import v1 from "./router/v1";
 import v2 from "./router/v2";
+import { createClient, RedisClientType } from "redis";
 export class App {
 	public static instance = new App();
 
@@ -14,6 +15,7 @@ export class App {
 		trustProxy: true,
 	});
 	public database: Database;
+	public redis: RedisClientType;
 
 	public config: Config;
 	public logger: Winston.Logger;
@@ -30,6 +32,12 @@ export class App {
 			this.config.database.password,
 			this.config.database.database
 		);
+		this.redis = createClient({
+			socket: {
+				port: this.config.redis.port,
+				host: this.config.redis.host,
+			},
+		});
 	}
 
 	async start(): Promise<void> {
@@ -52,6 +60,21 @@ export class App {
 				);
 			}
 		);
+
+		this.redis.on("connect", () => {
+			this.logger.info(
+				`Connected to redis (${this.config.redis.host}:${this.config.redis.port}) successfully`
+			);
+		});
+
+		this.redis.on("error", (err) => {
+			this.logger.info(
+				`An error occurred while trying to connect to redis`,
+				err
+			);
+		});
+
+		await this.redis.connect();
 	}
 
 	async stop(): Promise<void> {

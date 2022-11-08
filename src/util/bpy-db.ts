@@ -3,6 +3,7 @@ import {
 	BeatmapInfoDb,
 	BeatmapScoreDb,
 	UserBpyDb,
+	UserStatsDb,
 	UserTopPlaysDb,
 } from "../common/types";
 
@@ -21,6 +22,15 @@ export class BpyDb {
 			[username, username]
 		)) as UserBpyDb;
 		return data[0];
+	}
+
+	static async getStatsByID(id: number): Promise<UserStatsDb[]> {
+		return (await App.instance.database.query(
+			"SELECT mode, tscore, rscore, pp, plays, playtime, acc," +
+				"max_combo, xh_count, x_count, sh_count, s_count, a_count " +
+				"FROM stats WHERE id = ?",
+			[id]
+		)) as UserStatsDb[];
 	}
 
 	static async getUserTopPlays(
