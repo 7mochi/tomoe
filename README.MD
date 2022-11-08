@@ -42,3 +42,7 @@ See [compatibility](SV_COMPATIBILITY.MD).
 - osu!api v2
     (Not yet implemented)
 ```
+
+### Alternatives
+- [Tyro](https://github.com/Calemy/tyro)
+- [Karki](https://github.com/JKBGL/karki) (It hasn't updated for a while, not fully compatible with the latest versions of bancho.py)
