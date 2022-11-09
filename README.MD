@@ -33,7 +33,7 @@ See [compatibility](SV_COMPATIBILITY.MD).
 - osu!api v1
     /get_beatmaps      : Pending
     /get_scores        : Done
-    /get_user          : Done (Without user level and events)
+    /get_user          : Done (Without events)
     /get_user_best     : Done
     /get_user_recent   : Done
     /get_match         : Not supported on bancho.py
