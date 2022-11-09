@@ -433,13 +433,21 @@ export interface UserCompactStatsRankBanchoV2 {
 	country: number;
 }
 
-export interface Dictionary {
-	[index: string]: number;
-}
-
 export const GamemodeIntBanchoV2: Dictionary = {
 	osu: 0,
 	taiko: 1,
 	fruits: 2,
 	catch: 3,
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                    Other                                   */
+/* -------------------------------------------------------------------------- */
+export interface Dictionary {
+	[index: string]: number;
+}
+
+export interface LevelInfo {
+	level: number;
+	progress: number;
+}

@@ -79,7 +79,7 @@ export default async function (
 			ranked_score: `${userStats[gamemode].rscore}`,
 			total_score: `${userStats[gamemode].tscore}`,
 			pp_rank: `${userStats[gamemode].rank}`,
-			level: `727`, // TODO: To be implemented
+			level: `${Misc.getUserLevel(userStats[gamemode].tscore).level}`,
 			pp_raw: `${userStats[gamemode].pp}`,
 			accuracy: `${userStats[gamemode].acc}`,
 			count_rank_ss: `${userStats[gamemode].x_count}`,

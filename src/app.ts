@@ -7,6 +7,7 @@ import { fastify } from "fastify";
 import v1 from "./router/v1";
 import v2 from "./router/v2";
 import { createClient, RedisClientType } from "redis";
+
 export class App {
 	public static instance = new App();
 

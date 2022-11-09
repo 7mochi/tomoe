@@ -80,6 +80,8 @@ export default async function (
 		8
 	)}.jpg`;
 
+	const levelInfo = Misc.getUserLevel(userStats[GamemodeIntBanchoV2[gamemode]].tscore);
+
 	return reply.send({
 		avatar_url: `${bpyUrl}/${user.id}`,
 		country_code: user.country.toUpperCase(),
@@ -151,9 +153,8 @@ export default async function (
 		scores_recent_count: 0, // TODO: To be implemented
 		statistics: {
 			level: {
-				// TODO: To be implemented
-				current: 727,
-				progress: 69,
+				current: levelInfo.level,
+				progress: Math.floor(levelInfo.progress * 100),
 			},
 			global_rank: userStats[GamemodeIntBanchoV2[gamemode]].rank,
 			pp: userStats[GamemodeIntBanchoV2[gamemode]].pp,
